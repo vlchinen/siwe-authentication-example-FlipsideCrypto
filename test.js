@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'querystring';
 import { ethers } from 'ethers';
 
-const privateKey = '0x9645a340932373ec20fd545e10890d200d21b638a7dd1b08dbf9cf89ad008fbb';
+const privateKey = '';
 const wallet = new ethers.Wallet(privateKey);
 const address = wallet.address;
 
@@ -385,4 +385,5 @@ startAuthFlow()
     console.log('Step 9 Location:', data.step9.location);
     console.log('Step 10 Location:', data.step10.location);
   })
+
   .catch(error => console.error('Failed:', error.message));
