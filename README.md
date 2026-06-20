@@ -21,7 +21,8 @@ The research focuses on:
 
 The implemented prototype follows this sequence:
 
-```Wallet Initialization
+```
+Wallet Initialization
 |
 v
 Authentication Session
