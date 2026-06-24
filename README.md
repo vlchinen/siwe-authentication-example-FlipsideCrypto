@@ -1,98 +1,30 @@
-# Flipside Web3 Authentication Research
+# Flipside Crypto — Wallet Authentication Automation
 
-Research prototype exploring Flipside Crypto authentication and wallet
-connection flows using Ethereum signatures, SIWE, OAuth/OIDC, and Dynamic SDK.
+Automation built for Flipside Crypto's wallet-based login and wallet-binding flow, combining SIWE wallet signatures with an Auth0-based OAuth/OIDC login sequence.
+
+⚠️ **Note:** Flipside Crypto has since shut down. This repository is kept for educational and archival purposes — the live endpoints referenced here are no longer active.
 
 ## Overview
 
-This repository documents the analysis and reconstruction of a Web3
-authentication workflow.
+Flipside didn't use a simple "sign a message, get a token" flow — wallet authentication was wired into a full OAuth/OIDC login sequence (Auth0) plus a separate Dynamic SDK-based wallet-binding step. Automating it meant tracing the entire redirect chain end-to-end: each step's response determined the next request, with state, nonce, and cookies carried through ten separate steps.
 
-The research focuses on:
+## What This Covers
 
-- Sign-In with Ethereum (SIWE) authentication
-- OAuth/OIDC authorization flow
-- Dynamic SDK wallet connection flow
-- Wallet binding process
-- API request lifecycle and session handling
+- **Full OAuth/OIDC login automation** (`flipside-auth.js`) — a 10-step redirect chain combining a SIWE wallet signature with Auth0 authorization, consent, and callback handling
+- **Wallet binding via Dynamic SDK** (`flipside-add-wallet.js`) — connecting and associating an additional wallet to an existing account using Dynamic's SDK + SIWE
+- Notes on both flows, including where OAuth/OIDC and SIWE intersect
 
+## Approach
 
-## Authentication Flow
+Most of the work here was tracing behavior rather than reading documentation — the platform didn't publish how its login sequence worked. The process was: follow each redirect manually in the browser, note what each step needed (state, nonce, cookies) and what it returned, then reproduce that sequence in code. The 10-step chain in `flipside-auth.js` took the most iteration, since a wrong assumption at any step broke everything downstream.
 
-The implemented prototype follows this sequence:
+## Repository Structure
 
-```
-Wallet Initialization
-|
-v
-Authentication Session
-|
-v
-Dynamic SDK Initialization
-|
-v
-Wallet Connection
-|
-v
-SIWE Nonce Request
-|
-v
-Ethereum Message Signing
-|
-v
-Signature Verification
-|
-v
-Wallet Binding
-```
-
-## Technical Components
-
-- JavaScript / Node.js
-- ethers.js
-- SIWE message signing
-- OAuth/OIDC authorization
-- Dynamic SDK API analysis
-- HTTP session and cookie management
-
-
-## Scripts
-
-### flipside-auth.js
-
-Handles the authentication flow using Ethereum wallet signatures,
-including SIWE message generation and OAuth/OIDC authorization handling.
-
-
-### flipside-add-wallet.js
-
-Handles the wallet connection and binding workflow using Dynamic SDK.
-
-The flow includes:
-
-- SDK initialization
-- Wallet connection request
-- Nonce retrieval
-- SIWE signature generation
-- Signature verification
-- Wallet association
-
-
-## Research Notes
-
-The main challenge was understanding the interaction between:
-
-- Wallet signature authentication
-- Traditional web authentication systems
-- Dynamic SDK backend services
-- Wallet association APIs
-
-The project focuses on understanding authentication architecture
-and request flows rather than providing a production authentication library.
-
+- `flipside-auth.js` — full SIWE + OAuth/OIDC login automation (10-step flow)
+- `flipside-add-wallet.js` — wallet connection/binding via Dynamic SDK + SIWE
+- `siwe-flow.md` — notes on how SIWE integrates with the OAuth/OIDC sequence
+- `wallet-binding.md` — notes on the Dynamic SDK wallet-binding flow
 
 ## Disclaimer
 
-Created for educational and research purposes only.
-
-The original platform flow may change or become unavailable over time.
+Created for educational and archival purposes. The platform has shut down, and the endpoints referenced here are no longer active. No private keys, credentials, or production secrets are included.
